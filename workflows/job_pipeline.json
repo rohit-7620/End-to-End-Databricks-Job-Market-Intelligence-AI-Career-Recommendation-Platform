@@ -1,0 +1,93 @@
+{
+  "name": "job_market_intelligence_pipeline",
+  "email_notifications": {
+    "on_failure": []
+  },
+  "timeout_seconds": 3600,
+  "max_concurrent_runs": 1,
+  "schedule": {
+    "quartz_cron_expression": "0 0 6 * * ?",
+    "timezone_id": "Asia/Kolkata",
+    "pause_status": "PAUSED"
+  },
+  "tasks": [
+    {
+      "task_key": "setup_environment",
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/00_setup_environment",
+        "source": "WORKSPACE"
+      },
+      "new_cluster": {
+        "spark_version": "14.3.x-scala2.12",
+        "node_type_id": "Standard_DS3_v2",
+        "num_workers": 1,
+        "autotermination_minutes": 30
+      }
+    },
+    {
+      "task_key": "data_ingestion",
+      "depends_on": [{ "task_key": "setup_environment" }],
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/01_data_ingestion",
+        "source": "WORKSPACE"
+      },
+      "existing_cluster_id": "{{use same cluster as setup_environment or define new_cluster}}"
+    },
+    {
+      "task_key": "bronze_layer",
+      "depends_on": [{ "task_key": "data_ingestion" }],
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/02_bronze_layer",
+        "source": "WORKSPACE"
+      }
+    },
+    {
+      "task_key": "silver_layer",
+      "depends_on": [{ "task_key": "bronze_layer" }],
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/03_silver_layer",
+        "source": "WORKSPACE"
+      }
+    },
+    {
+      "task_key": "gold_layer",
+      "depends_on": [{ "task_key": "silver_layer" }],
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/04_gold_layer",
+        "source": "WORKSPACE"
+      }
+    },
+    {
+      "task_key": "job_recommendation",
+      "depends_on": [{ "task_key": "gold_layer" }],
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/06_job_recommendation",
+        "source": "WORKSPACE"
+      }
+    },
+    {
+      "task_key": "mlflow_tracking",
+      "depends_on": [{ "task_key": "job_recommendation" }],
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/07_mlflow_tracking",
+        "source": "WORKSPACE"
+      }
+    },
+    {
+      "task_key": "ai_career_assistant",
+      "depends_on": [{ "task_key": "mlflow_tracking" }],
+      "notebook_task": {
+        "notebook_path": "/Repos/your-username/job-market-intelligence-databricks/notebooks/08_ai_career_assistant",
+        "source": "WORKSPACE"
+      }
+    }
+  ],
+  "_comment_how_to_use": [
+    "1. Import this repo as a Databricks Repo (Repos -> Add Repo -> paste your GitHub URL).",
+    "2. Replace 'your-username' in every notebook_path above with your actual Repos path.",
+    "3. Either define a `new_cluster` block on every task (as shown on the first task), or create one interactive/job cluster and reference it via `existing_cluster_id` on every task for cost efficiency.",
+    "4. Go to Workflows -> Create Job -> Import from JSON (or `databricks jobs create --json @workflows/job_pipeline.json` via the CLI).",
+    "5. Flip `schedule.pause_status` to 'UNPAUSED' once you're ready to run on a schedule.",
+    "Note: 05_data_analysis.sql is intentionally NOT part of this job -- those queries live in Databricks SQL as dashboard-backing queries, not a notebook task."
+  ]
+}

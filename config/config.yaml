@@ -1,0 +1,98 @@
+# =============================================================================
+# Central configuration for the Job Market Intelligence Platform
+# All notebooks import values from here (via src/config_loader if desired,
+# or by reading the YAML directly) so paths/names live in exactly one place.
+# =============================================================================
+
+catalog:
+  name: "job_market"          # Unity Catalog catalog name (or hive_metastore if UC not available)
+  bronze_schema: "bronze"
+  silver_schema: "silver"
+  gold_schema: "gold"
+
+paths:
+  raw_data_dir: "/dbfs/FileStore/job_market/raw"          # DBFS path used inside Databricks
+  local_raw_data_dir: "data/raw"                            # local fallback path (this repo)
+  checkpoint_dir: "/dbfs/FileStore/job_market/checkpoints"
+  mlflow_experiment: "/Shared/job_market_intelligence"
+
+data_generation:
+  num_records: 8000
+  random_seed: 42
+  output_filename: "job_postings_raw.csv"
+
+skills_taxonomy:
+  # Master list used by the skill extractor to standardize free-text skills
+  - python
+  - sql
+  - pyspark
+  - spark
+  - scala
+  - java
+  - databricks
+  - delta lake
+  - airflow
+  - aws
+  - azure
+  - gcp
+  - snowflake
+  - tableau
+  - power bi
+  - excel
+  - machine learning
+  - deep learning
+  - tensorflow
+  - pytorch
+  - scikit-learn
+  - nlp
+  - mlflow
+  - docker
+  - kubernetes
+  - kafka
+  - hadoop
+  - git
+  - linux
+  - r
+  - statistics
+  - etl
+  - data modeling
+  - data warehousing
+  - rest api
+  - dbt
+
+job_roles:
+  - Data Engineer
+  - Data Scientist
+  - Data Analyst
+  - Machine Learning Engineer
+  - AI Engineer
+  - Databricks Developer
+  - Business Intelligence Analyst
+  - Analytics Engineer
+  - Big Data Engineer
+
+experience_levels:
+  - Entry Level
+  - Mid Level
+  - Senior Level
+  - Lead / Principal
+
+locations:
+  - "Bengaluru, India"
+  - "Pune, India"
+  - "Hyderabad, India"
+  - "Mumbai, India"
+  - "Remote - India"
+  - "New York, USA"
+  - "San Francisco, USA"
+  - "Austin, USA"
+  - "Remote - USA"
+  - "London, UK"
+  - "Berlin, Germany"
+  - "Toronto, Canada"
+
+ai_assistant:
+  use_llm: false               # set True to enable live LLM calls (requires API key)
+  llm_provider: "anthropic"
+  model: "claude-sonnet-4-5"
+  max_tokens: 1000
