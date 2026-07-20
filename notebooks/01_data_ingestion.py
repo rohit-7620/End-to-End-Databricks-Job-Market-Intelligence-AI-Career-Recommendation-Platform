@@ -31,7 +31,8 @@ from src.data_generator import generate_job_postings
 with open(os.path.join(REPO_ROOT, "config", "config.yaml"), "r") as f:
     config = yaml.safe_load(f)
 
-USE_SYNTHETIC = True
+# Set to False to use real data from postings.csv
+USE_SYNTHETIC = False  # Changed to use real LinkedIn data
 NUM_RECORDS = config["data_generation"]["num_records"]
 SEED = config["data_generation"]["random_seed"]
 FILENAME = config["data_generation"]["output_filename"]

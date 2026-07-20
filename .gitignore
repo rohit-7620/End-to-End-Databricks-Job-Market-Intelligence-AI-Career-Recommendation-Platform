@@ -11,6 +11,10 @@ data/raw/*.csv
 data/raw/*.parquet
 !data/raw/.gitkeep
 
+# Large dataset files
+src/postings.csv
+*.csv
+
 # Databricks / Spark
 *.log
 spark-warehouse/
