@@ -167,11 +167,58 @@ pytest tests/ -v
 skill extractor/standardizer, and the recommendation engine's ranking
 logic -- all runnable locally without a Databricks cluster.
 
+### Project Outputs
+This end-to-end job market intelligence system produces three interconnected components:
+
+1. Analytics Data Warehouse (job_market catalog)
+
+Bronze: Raw scraped job postings with ingestion metadata
+Silver: Cleaned, standardized data (titles normalized, dates parsed, salaries converted to INR)
+Gold: Seven analytics tables powering business insights—dim_job_postings (fact table), top_skills_by_demand, top_job_roles, avg_salary_by_role, jobs_by_location, experience_level_distribution, and skills_required_by_role
+2. ML Recommender System
+
+Registered MLflow model (workspace.default.job_market_recommender) trained on job-skill patterns
+Takes candidate profiles (skills, experience, preferences) and returns ranked job matches with similarity scores
+Versioned, production-ready for API deployment
+3. Interactive BI Dashboard
+
+4 KPIs: total postings (3,985), unique skills (117), top roles (41), average salary (₹1.24M)
+Visualizations: top skills demand, role distribution, salary by experience level, geographic hotspots, skill requirements per role
+Real-time filtering and drill-down for market exploration
+Practical Applications
+For Job Seekers
+
+Identify high-demand skills to prioritize for upskilling (Python, SQL, AWS dominate)
+Benchmark salary expectations by role and experience level
+Discover geographic opportunities (Bengaluru, Pune, Hyderabad lead)
+Get personalized job recommendations matching your profile
+For Recruiters & Hiring Managers
+
+Competitive intelligence—understand market salary ranges to attract talent
+Skills gap analysis—see which capabilities are most sought-after vs. available
+Location strategy—identify regions with high job concentration for office placement
+Talent sourcing—reverse-match candidates against job requirements
+For Educational Institutions
+
+Curriculum design—align training programs with employer demand (Data Engineer skills like Spark, Kafka appear frequently)
+Career counseling—guide students toward roles with strong market demand
+Industry partnerships—target companies posting in high-volume locations
+For Business Strategy
+
+Market trend analysis—track emerging skills (cloud, ML) vs. declining ones
+Workforce planning—forecast hiring needs based on industry patterns
+Competitive benchmarking—compare your job postings against market norms
+
 ## Screenshots
+<img width="1290" height="692" alt="image" src="https://github.com/user-attachments/assets/1cf3b612-c42f-409b-87a2-cc12827ad854" />
 
-_Add screenshots of your running dashboard, MLflow experiment runs, and
-Workflow DAG here once built in your workspace._
+<img width="1253" height="606" alt="image" src="https://github.com/user-attachments/assets/c63e54ab-c096-415b-b9ac-83af2df2c247" />
 
-## License
+<img width="1290" height="692" alt="image" src="https://github.com/user-attachments/assets/b8038a03-f2d9-4553-9d83-1ee3eccc48db" />
 
-MIT (or your preferred license) -- see `LICENSE`.
+
+
+
+
+
+
